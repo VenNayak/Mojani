@@ -1,0 +1,64 @@
+<div  align="center">
+    <h3>MOJANI- Approve Survey Appplications</h3>
+  </div>
+ <div *ngIf="approveSuccess; then successMsg else approveForm" ></div>
+   <ng-template #approveForm>
+  <div class="panel panel-default">
+  <div class="panel-heading">
+    <h1 class="panel-title">Search Criteria</h1>
+  </div>
+  <div class="panel-body">
+    <div class="form-group">
+      <div class="col-md-4">
+        <label for="wardNo" class="control-label required">Ward #</label>
+        <input type="text" id="wardNo" name="wardNo"  [(ngModel)]="wardNo"  />
+      </div>
+      <div class="col-md-4">
+      <button type="submit" class="btn btn-primary" (click)= "search()">Search</button>
+      </div>
+    </div>
+    </div>  
+    </div>
+<!--Search results of the land records for approval -->
+<div *ngIf= "fetchComplete" >
+<table class="table table-striped">
+  <thead>
+      <tr>
+          <th>Property ID</th>
+          <th>Ward No</th>
+          <th>Area Code</th>
+          <th>Site No</th>
+          <th>Total Area</th>
+          <th>Approve</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr *ngFor="let land of landRecords">
+          <td><a [routerLink] = "['/viewLandRecord', land.pid]">{{land.pid}}</a></td>
+          <td>{{land.wardNo}}</td>
+          <td>{{land.areaCode}}</td>
+          <td>{{land.siteNo}}</td>
+          <td>{{land.geoData.totalArea}}</td>
+         <td><input type="checkbox" name='approval'  [(ngModel)]='land.isMojaniApproved'  #approval="ngModel" /></td>
+      </tr>
+  </tbody>
+</table> 
+<div *ngIf='noSearchResults' style='color:red;' align='center'><strong>No matching results found !</strong></div>
+<div *ngIf='!noSearchResults' align='right'>
+<button type="submit" class="btn btn-primary" (click)= "onSubmit()">Approve</button>
+</div>
+</div>
+</ng-template>
+<!--Success message for the approval-->
+<ng-template #successMsg >
+<div class="alert alert-success"> <strong>Success!</strong>
+All the below approved records have been committed to the HyperLedger. Their unique digital Ids are listed below :
+<ul *ngFor= "let rec of approvedRecords">
+  <li>{{rec.pid}}</li>
+</ul>
+</div>
+  <div class="alert alert-info">
+    Please click on <strong>OK</strong> to approve other applications !
+  </div>
+  <div align="center"><button type="submit" class="btn btn-primary" (click)="submitNew()">OK</button></div>
+</ng-template>

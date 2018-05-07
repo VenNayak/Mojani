@@ -1,0 +1,9 @@
+.required:after {
+  content: " *";
+  color : red;
+}
+
+
+agm-map {
+  height: 300px;
+}

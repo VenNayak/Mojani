@@ -1,0 +1,155 @@
+<div  align="center">
+  <h3>MOJANI - View Application for Land Survey</h3>
+</div>
+
+<div class="applicationForm">
+  <form class="form-horizontal" [formGroup]="layoutForm" (ngSubmit)="onSubmit()">
+    <fieldset disabled>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h1 class="panel-title">Land Details</h1>
+      </div>
+      <div class="panel-body">
+        <div class="form-group">
+          <div class="col-md-4" [ngClass]="displayFieldCss('wardNo')">
+            <label for="wardNo" class="control-label required">Ward #</label>
+            <input type="text" id="wardNo" class="form-control" formControlName="wardNo" />
+            <app-show-validation-error [displayError]="isFieldValid('wardNo')" errorMsg="Ward # is mandatory"></app-show-validation-error>
+          </div>
+          <div class="col-md-4" [ngClass]="displayFieldCss('areaCode')">
+            <label for="areaCode" class="control-label required">Area Code</label>
+            <input type="text" id="areaCode" class="form-control" formControlName="areaCode" />
+            <app-show-validation-error [displayError]="isFieldValid('areaCode')" errorMsg="Area code is mandatory"></app-show-validation-error>
+          </div>
+          <div class="col-md-4" [ngClass]="displayFieldCss('siteNo')">
+            <label for="siteNo" class="control-label required">Plot/Site #</label>
+            <input type="text" id="siteNo" class="form-control" formControlName="siteNo" />
+            <app-show-validation-error [displayError]="isFieldValid('siteNo')" errorMsg="Plot/Site # is mandatory"></app-show-validation-error>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h1 class="panel-title">Geographic Data</h1>
+      </div>
+      <div class="panel-body">
+        <div formGroupName="geoData">
+          <div class="form-group">
+            <div class="col-md-4" [ngClass]="displayFieldCss('geoData.latitude')">
+              <label for="latitude" class="control-label required">Latitude</label>
+              <input type="text" id="latitude" class="form-control" formControlName="latitude" (change)="setGeoCordinates()" />
+              <app-show-validation-error [displayError]="isFieldValid('geoData.latitude')" errorMsg="Latitude is mandatory"></app-show-validation-error>
+            </div>
+            <div class="col-md-4" [ngClass]="displayFieldCss('geoData.longitude')">
+              <label for="Longitude" class="control-label required">Longitude</label>
+              <input type="text" id="longitude" class="form-control" formControlName="longitude" (change)="setGeoCordinates()" />
+              <app-show-validation-error [displayError]="isFieldValid('geoData.longitude')" errorMsg="Longitude is mandatory"></app-show-validation-error>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-4" [ngClass]="displayFieldCss('geoData.length')">
+              <label for="length" class="control-label required">Plot Length (ft.)</label>
+              <input type="text" id="length" class="form-control" formControlName="length" (change) = "calculateTotalArea()" />
+              <app-show-validation-error [displayError]="isFieldValid('geoData.length')" errorMsg="Plot length is mandatory"></app-show-validation-error>
+            </div>
+            <div class="col-md-4" [ngClass]="displayFieldCss('geoData.width')">
+              <label for="width" class="control-label required">Plot Width (ft.)</label>
+              <input type="text" id="width" class="form-control" formControlName="width" (change) = "calculateTotalArea()" />
+              <app-show-validation-error [displayError]="isFieldValid('geoData.width')" errorMsg="Plot width is mandatory"></app-show-validation-error>
+            </div>
+            <div class="col-md-4">
+              <label for="width" class="control-label">Total Plot Area (sq. ft.)</label>
+              <input type="text" id="width" class="form-control" formControlName="totalArea" readonly />
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12" [ngClass]="displayFieldCss('geoData.address')">
+              <label for="address" class="control-label required">Property Address</label>
+              <input type="text" id="address" class="form-control" formControlName="address" />
+              <app-show-validation-error [displayError]="isFieldValid('geoData.address')" errorMsg="Plot address is mandatory"></app-show-validation-error>
+            </div>
+          </div>
+          <div class="col-md-12" *ngIf="lat && long">
+          <app-gmaps [lat]="lat"  [lng]="long"></app-gmaps>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h1 class="panel-title">Upload Land Sketch</h1>
+      </div>
+      <div class="panel-body">
+        <div class="form-group">
+          <div class="col-md-4" [ngClass]="displayFieldCss('preMutationSketch')">
+            <label for="sketch" class="control-label required">Property Sketch</label>
+            <input type="file" (change)="fileChange($event)" placeholder="Upload file" accept="image/*" id="sketch" formControlName="preMutationSketch">
+            <app-show-validation-error [displayError]="isFieldValid('preMutationSketch')" errorMsg="Premutation sketch is mandatory"></app-show-validation-error>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h1 class="panel-title">Land Allottee Details</h1>
+      </div>
+      <div class="panel-body">
+        <div formGroupName="ownerDetails">
+          <div class="form-group">
+            <div class="col-md-4" [ngClass]="displayFieldCss('ownerDetails.ownerName')">
+              <label for="ownerName" class="control-label required">Allottee Name</label>
+              <input type="text" class="form-control" id="ownerName" formControlName="ownerName">
+              <app-show-validation-error [displayError]="isFieldValid('ownerDetails.ownerName')" errorMsg="Property allotee Name is mandatory"></app-show-validation-error>
+            </div>
+
+            <div class="col-md-4" [ngClass]="displayFieldCss('ownerDetails.aadharNo')">
+              <label for="aadharNo" class="control-label required">Aadhar #</label>
+              <input type="text" id="aadharNo" class="form-control" formControlName="aadharNo" />
+              <app-show-validation-error [displayError]="isFieldValid('ownerDetails.aadharNo')" errorMsg="Aadhar # is mandatory"></app-show-validation-error>
+            </div>
+
+            <div class="col-md-4" [ngClass]="displayFieldCss('ownerDetails.gender')">
+             <div> <label class="control-label required">Gender</label></div>
+              <label class="md-check radio-inline">
+                <input type="radio" value="M" name="gender" formControlName="gender">Male
+              </label>
+              <label class="md-check radio-inline">
+                <input type="radio" value="F" name="gender" formControlName="gender">Female
+              </label>
+              <app-show-validation-error [displayError]="isFieldValid('ownerDetails.gender')" errorMsg="Gender is mandatory"></app-show-validation-error>
+            </div>
+
+              </div>
+              <div class="form-group">
+                <div class="col-md-4" [ngClass]="displayFieldCss('ownerDetails.mobileNo')">
+                  <label for="mobileNo" class="control-label required">Mobile</label>
+                  <input type="text" id="mobileNo" class="form-control" formControlName="mobileNo" />
+                  <app-show-validation-error [displayError]="isFieldValid('ownerDetails.mobileNo')" errorMsg="Mobile number is mandatory"></app-show-validation-error>
+                </div>
+                <div class="col-md-4" [ngClass]="displayFieldCss('ownerDetails.emailID')">
+                  <label for="emailID" class="control-label required">Email ID</label>
+                  <input type="text" id="emailID" class="form-control" formControlName="emailID" />
+                  <app-show-validation-error [displayError]="isFieldValid('ownerDetails.emailID')" errorMsg="Email ID is mandatory"></app-show-validation-error>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-md-12" [ngClass]="displayFieldCss('ownerDetails.address')">
+                  <label for="ownerAddress" class="control-label required">Allottee Address</label>
+                  <input type="text" id="ownerAddress" class="form-control" formControlName="address" />
+                  <app-show-validation-error [displayError]="isFieldValid('ownerDetails.address')" errorMsg="Allotee address is mandatory"></app-show-validation-error>
+                </div>
+              </div>
+
+            </div>
+          </div>
+    </div>
+  </fieldset>
+  <div align="right">
+      <button type="submit" class="btn btn-primary">Back</button>
+    </div>
+  </form>
+</div>
+
