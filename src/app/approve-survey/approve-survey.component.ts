@@ -63,9 +63,9 @@ export class ApproveSurveyComponent implements OnInit {
               //  this.router.navigate(['/success', this.landRecord.pid]);
               this.landRecords = <LandRecord[]> response.landRecords;
              if(this.landRecords!=null && this.landRecords.length > 0){
-               this.noSearchResults= true;
+               this.noSearchResults= false;
              }else{
-               this.noSearchResults = false;
+               this.noSearchResults = true;
              }
               this.fetchComplete = true;     
               this.surveyData.updateData(this.landRecords);
