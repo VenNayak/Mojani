@@ -1,7 +1,7 @@
 <div  align="center">
   <h3>MOJANI - View Application for Land Survey</h3>
 </div>
-
+<div align="right"><app-logout></app-logout></div>
 <div class="applicationForm">
   <form class="form-horizontal" [formGroup]="layoutForm" (ngSubmit)="onSubmit()">
     <fieldset disabled>
@@ -77,20 +77,7 @@
         </div>
       </div>
     </div>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h1 class="panel-title">Upload Land Sketch</h1>
-      </div>
-      <div class="panel-body">
-        <div class="form-group">
-          <div class="col-md-4" [ngClass]="displayFieldCss('preMutationSketch')">
-            <label for="sketch" class="control-label required">Property Sketch</label>
-            <input type="file" (change)="fileChange($event)" placeholder="Upload file" accept="image/*" id="sketch" formControlName="preMutationSketch">
-            <app-show-validation-error [displayError]="isFieldValid('preMutationSketch')" errorMsg="Premutation sketch is mandatory"></app-show-validation-error>
-          </div>
-        </div>
-      </div>
-    </div>
+
 
     <div class="panel panel-default">
       <div class="panel-heading">

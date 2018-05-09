@@ -7,7 +7,7 @@ import {ViewlandrecordComponent } from './view-land-record/view-land-record.comp
 import {AuthGuard} from './guards/auth-guard';
 
 const routes: Routes = [
-  { path: 'layoutApplication', component: LayoutApplicationComponent },
+  { path: 'layoutApplication', component: LayoutApplicationComponent,canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'approveSurveys', component: ApproveSurveyComponent,canActivate: [AuthGuard] },
   { path: 'viewLandRecord/:id', component: ViewlandrecordComponent,canActivate: [AuthGuard] },

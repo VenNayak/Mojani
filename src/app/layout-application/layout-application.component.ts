@@ -8,6 +8,8 @@ import {
 import { ManageLandRecordsService } from '../services/managelandrecords.service';
 import { Router } from '@angular/router';
 import { LandRecord } from '../models/LandRecord';
+import { Http } from '@angular/http';
+import{FileUploadService} from '../services/file-upload.service';
 
 
 
@@ -22,7 +24,9 @@ export class LayoutApplicationComponent implements OnInit {
   submitSuccess: boolean = false;
   lat :number;
   long : number; 
- constructor(private formBuilder: FormBuilder, private manageLandRecordsService: ManageLandRecordsService) { }
+  filesToUpload: Array<File> = [];
+  formData: FormData = new FormData();
+ constructor(private formBuilder: FormBuilder, private manageLandRecordsService: ManageLandRecordsService,private http: Http, private filUploadService: FileUploadService) { }
   ngOnInit() {
     this.createForm();
   }
@@ -96,24 +100,25 @@ export class LayoutApplicationComponent implements OnInit {
         .subscribe(
         response => {
           console.log("res received addLandRecord service" + JSON.stringify(response));
-
-          if (response !=null && response.success) {
-            //  this.router.navigate(['/success', this.landRecord.pid]);
-            this.submitSuccess = true;
-          }
+            if (response !=null && response.success) {
+            //Upload the files to server
+            this.filUploadService.uploadFiles(this.formData)
+                .subscribe(files => console.log('files uploaded :' + files));
+              this.submitSuccess = true;
+            }
         });
     } else {
       this.validateAllFormFields(this.layoutForm);
     }
   }
 
-  fileChange(event) {
-    let fileList: FileList = event.target.files;
-    if (fileList.length > 0) {
-      let file: File = fileList[0];
-      let formData: FormData = new FormData();
-      formData.append('uploadFile', file, file.name);
-      console.log("file :" + file);
+  fileChange(event) { 
+   this.filesToUpload= <Array<File>>event.target.files;
+    const files: Array<File> = this.filesToUpload;
+    if (files.length > 0) {
+      let file: File = files[0];
+      this.formData.append("uploads[]",file, file['name']);
+      console.log("file name :" + file['name']);
 
     }
   }

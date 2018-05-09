@@ -24,26 +24,28 @@ export class LoginComponent implements OnInit {
   onSubmit(userlogin : NgForm){
     if(userlogin.valid){
         this.loading = true; // validation in progress
-        console.log(this.login);
+        console.log("Form values :" + JSON.stringify(this.login));
         let user = {"userId" : this.login.username, "password" : this.login.password};
-        this.loginAuthService.authenticateUserLogin (user)
+        //check for user authentication
+        this.loginAuthService.isUserAuthenticated (user)
         .subscribe(
-        response => {
+        authenticated => {
             this.loading=false;
-            console.log("res received authentication service" + JSON.stringify(response));
-            if (response !=null && response.authSuccess) {
+            console.log("res received authentication service :" + authenticated);
+            if (authenticated) {
               this.authMessage=null;
               //if auth success route according to the role
-              if(response.role == "Mojani_Surveyor"){
-                console.log("inside mojani survey'");
+              console.log("logged in role :" + this.loginAuthService.getLoggedInRole());
+              if(this.loginAuthService.getLoggedInRole() == "Mojani_Surveyor"){
+                console.log("inside mojani survey");
                 this.router.navigateByUrl('/layoutApplication');
               }
-              else if(response.role == "Mojani_Approver"){
+              else if(this.loginAuthService.getLoggedInRole() == "Mojani_Approver"){
                 console.log("Inside mojani approver");
                 this.router.navigateByUrl('/approveSurveys');
               }            
             }else{
-                this.authMessage = response.message;
+                this.authMessage = this.loginAuthService.getAuthMessage();
             }
          });
      }

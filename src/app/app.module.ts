@@ -19,7 +19,8 @@ import { LoginComponent } from './login/login.component';
 import { ViewlandrecordComponent } from './view-land-record/view-land-record.component';
 import { AuthGuard } from './guards/auth-guard';
 import { LoginAuthenticationService } from './services/login-authentication.service';
-
+import { LogoutComponent } from './logout/logout.component';
+import{FileUploadService} from './services/file-upload.service';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { LoginAuthenticationService } from './services/login-authentication.serv
     ApproveSurveyComponent,
     GmapsComponent,
     LoginComponent,
-    ViewlandrecordComponent
+    ViewlandrecordComponent,
+    LogoutComponent
   ],
   imports: [
     BrowserModule,
@@ -43,7 +45,7 @@ import { LoginAuthenticationService } from './services/login-authentication.serv
     AppRoutingModule
     
   ],
-  providers: [SurveyDataService,ManageLandRecordsService,AuthGuard,LoginAuthenticationService],
+  providers: [SurveyDataService,ManageLandRecordsService,AuthGuard,LoginAuthenticationService,FileUploadService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
